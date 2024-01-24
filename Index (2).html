@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchical Tree Formation</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .node {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 10px;
+        }
+        .node input {
+            margin-bottom: 5px;
+        }
+        .add-button {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="tree-container">
+    <div class="node" data-type="root">
+        <input type="text" value="Root Node" readonly>
+        <input type="text" placeholder="Enter value for node">
+        <button class="add-button" onclick="addChild(this)">Add Child</button>
+    </div>
+</div>
+
+<script>
+    function addChild(button) {
+        const parentNode = button.parentNode;
+        const valueInput = parentNode.querySelector('input[type="text"][placeholder="Enter value for node"]');
+        const newNode = createNode("Child Node", valueInput.value);
+        parentNode.appendChild(newNode);
+        valueInput.value = "";
+    }
+
+    function addParent(button) {
+        const parentNode = button.parentNode;
+        const valueInput = parentNode.querySelector('input[type="text"][placeholder="Enter value for node"]');
+        const newNode = createNode("Parent Node", valueInput.value);
+        parentNode.appendChild(newNode);
+        valueInput.value = "";
+    }
+
+    function deleteNode(button) {
+        const parentNode = button.parentNode;
+        parentNode.parentNode.removeChild(parentNode);
+    }
+
+    function updateNode(input) {
+        input.setAttribute("readonly", true);
+    }
+
+    function allowEdit(input) {
+        input.removeAttribute("readonly");
+    }
+
+    function createNode(type, value) {
+        const newNode = document.createElement("div");
+        newNode.classList.add("node");
+        newNode.dataset.type = type;
+
+        const input = document.createElement("input");
+        input.type = "text";
+        input.value = value || (type + " " + (document.querySelectorAll('.node[data-type="' + type + '"]').length + 1));
+        input.readOnly = true;
+
+        const valueInput = document.createElement("input");
+        valueInput.type = "text";
+        valueInput.placeholder = "Enter value for node";
+
+        const addChildButton = document.createElement("button");
+        addChildButton.innerHTML = "Add Child";
+        addChildButton.onclick = function () { addChild(this); };
+
+        const addParentButton = document.createElement("button");
+        addParentButton.innerHTML = "Add Parent";
+        addParentButton.onclick = function () { addParent(this); };
+
+        const deleteButton = document.createElement("button");
+        deleteButton.innerHTML = "Delete";
+        deleteButton.onclick = function () { deleteNode(this); };
+
+        const editButton = document.createElement("button");
+        editButton.innerHTML = "Edit";
+        editButton.onclick = function () { allowEdit(input); };
+
+        const updateButton = document.createElement("button");
+        updateButton.innerHTML = "Update";
+        updateButton.onclick = function () { updateNode(input); };
+
+        newNode.appendChild(input);
+        newNode.appendChild(valueInput);
+        newNode.appendChild(addChildButton);
+        newNode.appendChild(addParentButton);
+        newNode.appendChild(deleteButton);
+        newNode.appendChild(editButton);
+        newNode.appendChild(updateButton);
+
+        return newNode;
+    }
+</script>
+
+</body>
+</html>
